@@ -28,7 +28,7 @@ void setup() {
     int randomIndex = int(random(files.length));
     PImage selectedImage = loadImage(files[randomIndex].getPath());
 
-    foreground1 = new Foreground(selectedImage, 0, 0, 1, pg);
+    foreground1 = new Foreground(selectedImage, 0, 0, 1,50, pg);
   }
 }
 
@@ -38,5 +38,6 @@ void draw() {
   veiculo.desenha();
   veiculo.noiseMovement();
 
-  foreground1.desenha();
+  //foreground1.desenha();
+  foreground1.scroll();
 }
