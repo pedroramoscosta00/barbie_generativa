@@ -2,7 +2,7 @@ class Foreground {
   PImage img;
   float x, xp, y, tamanho;
   PGraphics pg;
-  float vel;
+  float vel, calculatedY;
 
   Foreground(PImage img, float x, float xp, float y, float vel, PGraphics pg) {
     this.img = img;
@@ -16,6 +16,7 @@ class Foreground {
   void desenha() {
     pg.beginDraw();
     y = pg.height - img.height;
+    calculatedY = height-img.height;
     image(img, x, y);
     pg.endDraw();
   }
@@ -29,5 +30,9 @@ class Foreground {
       image(img, x, y);
       pg.endDraw();
     }
+  }
+
+  float getCalculatedY() {
+    return calculatedY;
   }
 }
