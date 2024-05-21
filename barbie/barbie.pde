@@ -34,7 +34,7 @@ void setup() {
    String fore4Path = sketchPath("imagens/foregrounds/foreground4.png");
    String fore5Path = sketchPath("imagens/foregrounds/foreground5.png");*/
 
-  foreground1_1 = new Foreground(fore1, 0, 0, 0, 50, pg);
+  foreground1_1 = new Foreground(fore1, 0, height-fore1.height, 0, 50, pg);
   foreground1_2 = new Foreground(fore2, 0, 0, 0, 50, pg);
   foreground1_3 = new Foreground(fore3, 0, 0, 0, 50, pg);
   foreground1_4 = new Foreground(fore4, 0, 0, 0, 50, pg);
@@ -62,7 +62,7 @@ void setup() {
 
   // Load and initialize images from "staticElementos" folder
   PImage img4 = loadImage(sketchPath("imagens/staticElementos/asset2.png"));
-  element2 = new StaticVeiculo(img4, random(0, width), staticElementosYMap.get("asset2.png"), 500, pg, 200, 0.00001, 1, 1);
+  element2 = new StaticVeiculo(img4, random(0, width), staticElementosYMap.get("asset2.png"), foreground1_1.y, pg, 200, 0.00001, 1, 1);
   PImage img5 = loadImage(sketchPath("imagens/staticElementos/asset5.png"));
   element3 = new StaticVeiculo(img5, random(0, width), staticElementosYMap.get("asset5.png"), 500, pg, 200, 0.00001, 1, 1);
   PImage img6 = loadImage(sketchPath("imagens/staticElementos/asset7.png"));
