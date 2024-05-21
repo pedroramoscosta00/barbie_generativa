@@ -14,15 +14,15 @@ class Foreground {
   }
 
   void desenha() {
-   pg.beginDraw();
-   y = pg.height - img.height;
-   image(img, x, y);
-   pg.endDraw();
-   }
+    pg.beginDraw();
+    y = pg.height - img.height;
+    image(img, x, y);
+    pg.endDraw();
+  }
 
   void scroll() {
-   x = xp- frameCount * vel % img.width;
-   
+    x = xp- frameCount * vel % img.width;
+
     for (float i = -x; i < width; i += img.width) {
       pg.beginDraw();
       y = pg.height - img.height;

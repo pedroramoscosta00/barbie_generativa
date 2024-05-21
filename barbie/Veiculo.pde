@@ -1,6 +1,6 @@
 class Veiculo {
   PImage img;
-  float x, y, ppx, ppy;
+  float x, y, ppx, ppy, velX;
   int tamanho, intervalo;
   PGraphics pg;
   int noiseFreq;
@@ -17,6 +17,7 @@ class Veiculo {
     this.noiseFreq = noiseFreq;
     this.noiseScale = noiseScale;
     this.intervalo = intervalo;
+    this.velX = velX;
   }
 
 
@@ -44,13 +45,14 @@ class Veiculo {
     noFill();
     //rect(x - img.width/2, y, img.width, img.height);
   }
-  
-  
-  void desaparece(){
+
+
+  /*void desaparece() {
     float currentMillis = millis();
     float previousMillis;
-    if (currentMillis - previousMillis >= intervalo){
+    if (currentMillis - previousMillis >= intervalo) {
       x += velX;
-  }
-  previousMillis = currentMillis;
+    }
+    previousMillis = currentMillis;
+  }*/
 }
