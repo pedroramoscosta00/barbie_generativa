@@ -1,6 +1,9 @@
+import processing.sound.*;
+
 import java.io.File;
 import java.util.HashMap;
 
+SoundFile sound;
 PImage imgVeiculo, imgKen, imgFore1;
 PGraphics pg;
 Veiculo veiculo, element;
@@ -13,11 +16,21 @@ Background bg1;
 HashMap<String, Float> staticElementosYMap = new HashMap<String, Float>();
 HashMap<PImage, Float> foregroundYMap = new HashMap<PImage, Float>();
 
+
+// Array to store particles
+ArrayList<Particle> particles = new ArrayList<Particle>();
+float centerX, centerY; // center of the explosion
+boolean emitParticles = true; // flag to control emission
+float lastTime = 0;
+
 void setup() {
   size(1920, 960);
 
   // Definir objetos de classes
   pg = createGraphics(width, height);
+
+  sound = new SoundFile(this, "musica/Dua Lipa - Dance The Night .mp3");
+  sound.play();
 
   // Veiculo(imgVeiculo, x, y, altura, largura, pgraphics, noiseFreq(25-200), noiseScale(0.1-0.0001));
 
@@ -113,4 +126,40 @@ void draw() {
 
   foreground1.scroll();
   foreground2.scroll();
+
+  float currentTime = millis();
+  float interval = 545*8;
+
+
+  if (currentTime - lastTime >= interval) {
+    // Your processing code here
+    if (emitParticles) {
+      for (int i = 0; i < 50; i++) {
+        // Random positions within the canvas (adjust range as needed)
+        float randomX = width/2;
+        float randomY = height/2;
+        int randomShape = round(random(3)); // random shape between 0 (circle) and 2 (asterisk)
+
+        particles.add(new Particle(randomX, randomY, randomShape));
+      }
+      emitParticles = false; // disable further emission
+    }
+
+    // Update and display particles
+    for (int i = particles.size() - 1; i >= 0; i--) {
+      Particle p = particles.get(i);
+      p.update();
+      p.display();
+      if (p.isDead()) {
+        particles.remove(i);
+      }
+    }
+
+    // Clear all particles if lifespan is done (explosion fades)
+    if (particles.isEmpty()) {
+      //background(0); // clear remaining trails
+      lastTime = currentTime; // Update last action time
+      emitParticles = true;
+    }
+  }
 }
