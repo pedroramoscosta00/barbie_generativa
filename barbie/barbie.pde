@@ -1,9 +1,17 @@
 import processing.sound.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
 
 import java.io.File;
 import java.util.HashMap;
 
-SoundFile sound;
+//Sound
+//SoundFile sound;
+Minim minim;
+AudioPlayer player;
+BeatDetect beat;
+
+
 PImage imgVeiculo, imgKen, imgFore1;
 PGraphics pg;
 Veiculo veiculo, element;
@@ -22,6 +30,7 @@ ArrayList<Particle> particles = new ArrayList<Particle>();
 float centerX, centerY; // center of the explosion
 boolean emitParticles = true; // flag to control emission
 float lastTime = 0;
+float currentTime;
 
 void setup() {
   size(1920, 960);
@@ -29,8 +38,16 @@ void setup() {
   // Definir objetos de classes
   pg = createGraphics(width, height);
 
-  sound = new SoundFile(this, "musica/Dua Lipa - Dance The Night .mp3");
-  sound.play();
+  //sound = new SoundFile(this, "musica/Dua Lipa - Dance The Night .mp3");
+  minim = new Minim(this);
+  
+  // Load an audio file
+  player = minim.loadFile("musica/Dua Lipa - Dance The Night .mp3", 1024);
+  player.play();
+  
+  // Initialize BeatDetect
+  beat = new BeatDetect();
+
 
   // Veiculo(imgVeiculo, x, y, altura, largura, pgraphics, noiseFreq(25-200), noiseScale(0.1-0.0001));
 
@@ -92,6 +109,8 @@ void setup() {
   /*______________________Lista de Backgrounds______________________*/
   PImage background1 = getRandomImageFrom(sketchPath("imagens/backgrounds"));
   bg1 = new Background(background1, 0, 0, pg);
+
+  currentTime = millis();
 }
 
 PImage getRandomImageFrom(String pathToFolderWithImgs) {
@@ -127,39 +146,55 @@ void draw() {
   foreground1.scroll();
   foreground2.scroll();
 
-  float currentTime = millis();
-  float interval = 545*8;
 
+  //float interval = 0;
+  
+  // Detect beats in the current audio frame
+  beat.detect(player.mix);
 
-  if (currentTime - lastTime >= interval) {
-    // Your processing code here
-    if (emitParticles) {
-      for (int i = 0; i < 50; i++) {
-        // Random positions within the canvas (adjust range as needed)
-        float randomX = width/2;
-        float randomY = height/2;
-        int randomShape = round(random(3)); // random shape between 0 (circle) and 2 (asterisk)
+  print(beat.isKick());
+  if (beat.isKick()) {
+    print(beat.isKick());
+  }
+  
+  //if (currentTime - lastTime >= interval) {
+  // Your processing code here
+  if (emitParticles) {
+    float randomX = random(0, width);
+    float randomY = random(0, height/3);
 
-        particles.add(new Particle(randomX, randomY, randomShape));
-      }
-      emitParticles = false; // disable further emission
+    for (int i = 0; i < 50; i++) {
+      // Random positions within the canvas (adjust range as needed)
+      //float randomX = width/2;
+      //float randomY = height/2;
+
+      int randomShape = round(random(3)); // random shape between 0 (circle) and 2 (asterisk)
+
+      particles.add(new Particle(randomX, randomY, randomShape));
     }
+    emitParticles = false; // disable further emission
+  }
 
-    // Update and display particles
-    for (int i = particles.size() - 1; i >= 0; i--) {
-      Particle p = particles.get(i);
-      p.update();
-      p.display();
-      if (p.isDead()) {
-        particles.remove(i);
-      }
-    }
-
-    // Clear all particles if lifespan is done (explosion fades)
-    if (particles.isEmpty()) {
-      //background(0); // clear remaining trails
-      lastTime = currentTime; // Update last action time
-      emitParticles = true;
+  // Update and display particles
+  for (int i = particles.size() - 1; i >= 0; i--) {
+    Particle p = particles.get(i);
+    p.update();
+    p.display();
+    if (p.isDead()) {
+      particles.remove(i);
     }
   }
+
+
+  if (currentTime >= 545) {
+    currentTime = 0;
+    print(currentTime);
+  }
+
+  // Call the particles again if lifespan is done (explosion fades)
+  if (particles.isEmpty() && currentTime == 0) {
+    //lastTime = currentTime; // Update last action time
+    emitParticles = true;
+  }
+  //}
 }
