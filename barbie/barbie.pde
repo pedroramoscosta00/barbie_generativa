@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 //Sound
 //SoundFile sound;
-Minim minim;
-AudioPlayer player;
-BeatDetect beat;
-
 
 PImage imgVeiculo, imgKen, imgFore1;
 PGraphics pg;
@@ -32,21 +28,33 @@ boolean emitParticles = true; // flag to control emission
 float lastTime = 0;
 float currentTime;
 
+//DIAS variables
+Dias dias;
+
 void setup() {
   size(1920, 960);
 
   // Definir objetos de classes
   pg = createGraphics(width, height);
 
-  //sound = new SoundFile(this, "musica/Dua Lipa - Dance The Night .mp3");
+
+  //==============================SOUND==============================
   minim = new Minim(this);
-  
-  // Load an audio file
-  player = minim.loadFile("musica/Dua Lipa - Dance The Night .mp3", 1024);
-  player.play();
-  
-  // Initialize BeatDetect
-  beat = new BeatDetect();
+  song = minim.loadFile("musica/Dua Lipa - Dance The Night .mp3", 1024);
+  song.play();
+  // a beat detection object that is FREQ_ENERGY mode that
+  // expects buffers the length of song's buffer size
+  // and samples captured at songs's sample rate
+  beat = new BeatDetect(song.bufferSize(), song.sampleRate());
+
+  beat.setSensitivity(300);
+  kickSize = snareSize = hatSize = 16;
+  // make a new beat listener, so that we won't miss any buffers for the analysis
+  bl = new BeatListener(beat, song);
+
+
+  //==============================Dias==============================
+  dias = new Dias(width, height, 150, width/2, 500, 545*10);
 
 
   // Veiculo(imgVeiculo, x, y, altura, largura, pgraphics, noiseFreq(25-200), noiseScale(0.1-0.0001));
@@ -77,6 +85,7 @@ void setup() {
    foreground2_4 = new Foreground(fore4, 0, width, 0, 50, pg);
    foreground2_5 = new Foreground(fore5, 0, width, 0, 50, pg);*/
 
+  //==============================Imagens==============================
   PImage fore1 = getRandomImageFrom(sketchPath("imagens/foregrounds"));
   foreground1 = new Foreground(fore1, 0, 0, 0, 50, pg);
   foreground2 = new Foreground(fore1, 0, width, 0, 50, pg);
@@ -110,6 +119,8 @@ void setup() {
   PImage background1 = getRandomImageFrom(sketchPath("imagens/backgrounds"));
   bg1 = new Background(background1, 0, 0, pg);
 
+
+  //==============================Timer==============================
   currentTime = millis();
 }
 
@@ -125,11 +136,15 @@ PImage getRandomImageFrom(String pathToFolderWithImgs) {
 }
 
 void draw() {
-  background(255);
 
+  //==============================Background==============================
   bg1.desenha();
 
+  //==============================Dias==============================
+  dias.desenha();
 
+
+  //==============================Elementos==============================
   element.desenha();
   element.noiseMovement();
 
@@ -140,25 +155,16 @@ void draw() {
   element4.desenha();
   element4.noiseMovement();
 
+  //==============================Veiculos==============================
   veiculo.desenha();
   veiculo.noiseMovement();
 
+  //==============================Foreground==============================
   foreground1.scroll();
   foreground2.scroll();
 
 
-  //float interval = 0;
-  
-  // Detect beats in the current audio frame
-  beat.detect(player.mix);
-
-  print(beat.isKick());
-  if (beat.isKick()) {
-    print(beat.isKick());
-  }
-  
-  //if (currentTime - lastTime >= interval) {
-  // Your processing code here
+  //==============================Particles==============================
   if (emitParticles) {
     float randomX = random(0, width);
     float randomY = random(0, height/3);
@@ -192,9 +198,8 @@ void draw() {
   }
 
   // Call the particles again if lifespan is done (explosion fades)
-  if (particles.isEmpty() && currentTime == 0) {
+  if (/*particles.isEmpty()*/ beat.isSnare()) {
     //lastTime = currentTime; // Update last action time
     emitParticles = true;
   }
-  //}
 }
