@@ -26,10 +26,24 @@ ArrayList<Particle> particles = new ArrayList<Particle>();
 float centerX, centerY; // center of the explosion
 boolean emitParticles = true; // flag to control emission
 float lastTime = 0;
-float currentTime;
+int currentTime;
 
 //DIAS variables
 Dias dias;
+
+// Declare a TextDisplay object
+TextDisplay textDisplay;
+int interval = 13000;       // Interval between actions (in milliseconds)
+int actionDuration = 7000; // Duration of the action (in milliseconds)
+int lastActionTime = 0;
+boolean isActionActive = false;
+
+int intervalCavalos = 1000; 
+int lastActionTimeCavalo = 0;
+boolean isCavalosActive = false;
+
+PImage personagem, imgCavalo;
+
 
 void setup() {
   size(1920, 960);
@@ -55,6 +69,11 @@ void setup() {
 
   //==============================Dias==============================
   dias = new Dias(width, height, 150, width/2, 500, 545*10);
+
+
+
+  //==============================Text==============================
+  //textDisplay = new TextDisplay(messages, personegem);
 
 
   // Veiculo(imgVeiculo, x, y, altura, largura, pgraphics, noiseFreq(25-200), noiseScale(0.1-0.0001));
@@ -121,7 +140,8 @@ void setup() {
 
 
   //==============================Timer==============================
-  currentTime = millis();
+  lastActionTime = millis();
+  lastActionTimeCavalo = millis();
 }
 
 PImage getRandomImageFrom(String pathToFolderWithImgs) {
@@ -136,7 +156,6 @@ PImage getRandomImageFrom(String pathToFolderWithImgs) {
 }
 
 void draw() {
-
   //==============================Background==============================
   bg1.desenha();
 
@@ -163,19 +182,13 @@ void draw() {
   foreground1.scroll();
   foreground2.scroll();
 
-
   //==============================Particles==============================
   if (emitParticles) {
     float randomX = random(0, width);
     float randomY = random(0, height/3);
 
     for (int i = 0; i < 50; i++) {
-      // Random positions within the canvas (adjust range as needed)
-      //float randomX = width/2;
-      //float randomY = height/2;
-
       int randomShape = round(random(3)); // random shape between 0 (circle) and 2 (asterisk)
-
       particles.add(new Particle(randomX, randomY, randomShape));
     }
     emitParticles = false; // disable further emission
@@ -191,15 +204,51 @@ void draw() {
     }
   }
 
-
-  if (currentTime >= 545) {
-    currentTime = 0;
-    print(currentTime);
-  }
-
   // Call the particles again if lifespan is done (explosion fades)
   if (/*particles.isEmpty()*/ beat.isSnare()) {
     //lastTime = currentTime; // Update last action time
     emitParticles = true;
   }
+
+  //==============================Text==============================
+  currentTime = millis();
+  if (currentTime - lastActionTime >= interval) {
+    lastActionTime = currentTime; // Update the last action time
+    isActionActive = true;
+
+    textDisplay = new TextDisplay(messages, personagem);
+    personagem = getRandomImageFrom(sketchPath("imagens/personagens"));
+  }
+
+  // Check if the action duration has passed
+  if (isActionActive && (currentTime - lastActionTime <= actionDuration)) {
+    textDisplay.desenharPersonagem(personagem);
+    textDisplay.display(width / 2, height / 4*3);
+  } else {
+    isActionActive = false; // End the action
+  }
+  
+  
+  //==============================CAVALOS==============================
+  if (currentTime - lastActionTimeCavalo >= intervalCavalos) {
+    lastActionTimeCavalo = currentTime; // Update the last action time
+    isCavalosActive = true;
+
+    textDisplay = new TextDisplay(messages, personagem);
+    personagem = getRandomImageFrom(sketchPath("imagens/cavalos"));
+  }
+
+  // Check if the action duration has passed
+  if (isActionActive && (currentTime - lastActionTime <= actionDuration)) {
+    image(imgCavalo, 0, 0);
+  } else {
+    isCavalosActive = false; // End the Cavalos
+  }
+ 
 }
+
+
+/*void mousePressed() {
+ // Select new random text when the mouse is pressed
+ textDisplay.selectRandomText(messages);
+ }*/
