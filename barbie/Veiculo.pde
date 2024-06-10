@@ -32,6 +32,27 @@ class Veiculo {
     x= ppx;
   }
 
+
+void roda() {
+    float currentMillis = millis();
+    float previousMillis =0;
+    float angle = 0;
+    
+
+  rotate(angle); // Rotate by the specified angle
+    
+    
+    if (currentMillis - previousMillis >= random(3000, 8000)) {
+      if (angle < TAU) {
+        angle += 0.01; // Adjust this value to control the rotation speed
+      } else {
+        angle = TAU; // Ensure the angle stops exactly at TWO_PI
+      }
+    }
+  }
+  
+  
+  
   void desenha() {
     // Resize the image while maintaining aspect ratio
     /*
@@ -47,12 +68,12 @@ class Veiculo {
   }
 
 
-  /*void desaparece() {
+  void desaparece() {
     float currentMillis = millis();
-    float previousMillis;
-    if (currentMillis - previousMillis >= intervalo) {
-      x += velX;
+    float previousMillis =0;
+    if (currentMillis - previousMillis >= 10000) {
+      ppx += velX;
+      velX += 0.1;
     }
-    previousMillis = currentMillis;
-  }*/
+  }
 }

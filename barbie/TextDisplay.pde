@@ -27,42 +27,64 @@ class TextDisplay {
   String text;
   PImage img;
   PGraphics pg;
+  color cor;
 
   int x=0;
   int y=0;
-  
+
   float calculatedY;
-  
+
+  color bgColor = color(255);
+
+  float angle = 0;
+  float radius = 50; // Initial radius of the spiral
+  float angularSpeed = 0.05; // Speed of rotation
+  float radiusSpeed = 0.5; // Speed of radius change
+
+
 
   // Constructor
-  TextDisplay(String[] messages, PImage img) {
+  TextDisplay(String[] messages, PImage img, color cor) {
     selectRandomText(messages);
     this.img = img;
+    this.cor = cor;
   }
 
   // Method to randomly select text from the array
+
   void selectRandomText(String[] messages) {
     int index = int(random(messages.length));
     text = messages[index];
   }
 
   void desenharPersonagem(PImage img) {
-    /*
-    pg.beginDraw();
-    y = pg.height - img.height;
-    calculatedY = height-img.height;
-    image(img, x, y);
-    pg.endDraw();*/
     fill(255, 100);
+    rectMode(CORNERS);
     rect(0, 0, width, height);
     image(img, x, y);
   }
-  
-  // Method to display the text at a given position
+
+
   void display(float x, float y) {
     textSize(32);
-    fill(0);
     textAlign(CENTER, CENTER);
+
+    // Draw the star
+    noStroke();
+    fill(255);
+
+
+
+    // Calculate text dimensions
+    float textWidth = textWidth(text);
+    float textHeight = textAscent() + textDescent();
+
+    fill(bgColor);
+    rectMode(CENTER);
+    rect(x, y, textWidth + 20, textHeight + 20);
+
+    // Draw text
+    fill(cor);
     text(text, x, y);
   }
 }

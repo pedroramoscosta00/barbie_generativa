@@ -5,8 +5,9 @@ import ddf.minim.analysis.*;
 import java.io.File;
 import java.util.HashMap;
 
-//Sound
-//SoundFile sound;
+//fonts
+PFont myFont;
+
 
 PImage imgVeiculo, imgKen, imgFore1;
 PGraphics pg;
@@ -38,11 +39,15 @@ int actionDuration = 7000; // Duration of the action (in milliseconds)
 int lastActionTime = 0;
 boolean isActionActive = false;
 
-int intervalCavalos = 1000; 
+int intervalCavalos = 1000;
 int lastActionTimeCavalo = 0;
 boolean isCavalosActive = false;
 
 PImage personagem, imgCavalo;
+
+//stars in quotes
+ArrayList<Star> stars;
+
 
 
 void setup() {
@@ -70,39 +75,11 @@ void setup() {
   //==============================Dias==============================
   dias = new Dias(width, height, 150, width/2, 500, 545*10);
 
+  //fonts
+  myFont = loadFont("Bartex-48.vlw");
 
 
-  //==============================Text==============================
-  //textDisplay = new TextDisplay(messages, personegem);
-
-
-  // Veiculo(imgVeiculo, x, y, altura, largura, pgraphics, noiseFreq(25-200), noiseScale(0.1-0.0001));
-
-  /*______________________Lista de Foregrounds______________________*/
-  // Receber lista de itens da pasta
-  /*PImage fore1 = loadImage(sketchPath("imagens/foregrounds/foreground1.png"));
-   PImage fore2 = loadImage(sketchPath("imagens/foregrounds/foreground2.png"));
-   PImage fore3 = loadImage(sketchPath("imagens/foregrounds/foreground3.png"));
-   PImage fore4 = loadImage(sketchPath("imagens/foregrounds/foreground4.png"));
-   PImage fore5 = loadImage(sketchPath("imagens/foregrounds/foreground5.png"));*/
-
-  /*String fore1Path = sketchPath("imagens/foregrounds/foreground1.png");
-   String fore2Path = sketchPath("imagens/foregrounds/foreground2.png");
-   String fore3Path = sketchPath("imagens/foregrounds/foreground3.png");
-   String fore4Path = sketchPath("imagens/foregrounds/foreground4.png");
-   String fore5Path = sketchPath("imagens/foregrounds/foreground5.png");*/
-
-  /*foreground1_1 = new Foreground(fore1, 0, height-fore1.height, 0, 50, pg);
-   foreground1_2 = new Foreground(fore2, 0, 0, 0, 50, pg);
-   foreground1_3 = new Foreground(fore3, 0, 0, 0, 50, pg);
-   foreground1_4 = new Foreground(fore4, 0, 0, 0, 50, pg);
-   foreground1_5 = new Foreground(fore5, 0, 0, 0, 50, pg);
-   
-   foreground2_1 = new Foreground(fore1, 0, width, 0, 50, pg);
-   foreground2_2 = new Foreground(fore2, 0, width, 0, 50, pg);
-   foreground2_3 = new Foreground(fore3, 0, width, 0, 50, pg);
-   foreground2_4 = new Foreground(fore4, 0, width, 0, 50, pg);
-   foreground2_5 = new Foreground(fore5, 0, width, 0, 50, pg);*/
+ 
 
   //==============================Imagens==============================
   PImage fore1 = getRandomImageFrom(sketchPath("imagens/foregrounds"));
@@ -142,6 +119,13 @@ void setup() {
   //==============================Timer==============================
   lastActionTime = millis();
   lastActionTimeCavalo = millis();
+  
+  //==============================stars in quotes==============================
+  // Initialize stars
+  stars = new ArrayList<Star>();
+  for (int i = 0; i < 10; i++) {
+    stars.add(new Star(random(TWO_PI), 50 + i * 10, 0.05, 0.5));
+  }
 }
 
 PImage getRandomImageFrom(String pathToFolderWithImgs) {
@@ -167,16 +151,20 @@ void draw() {
   element.desenha();
   element.noiseMovement();
 
-  element2.desenha();
-  element2.noiseMovement();
-  element3.desenha();
-  element3.noiseMovement();
-  element4.desenha();
-  element4.noiseMovement();
+  //element2.desenha();
+  //element2.noiseMovement();
+//element3.desenha();
+  //element3.noiseMovement();
+  //element4.desenha();
+  //element4.noiseMovement();
 
   //==============================Veiculos==============================
+  veiculo.roda();
   veiculo.desenha();
   veiculo.noiseMovement();
+  veiculo.desaparece();
+
+
 
   //==============================Foreground==============================
   foreground1.scroll();
@@ -205,8 +193,7 @@ void draw() {
   }
 
   // Call the particles again if lifespan is done (explosion fades)
-  if (/*particles.isEmpty()*/ beat.isSnare()) {
-    //lastTime = currentTime; // Update last action time
+  if (beat.isSnare()) {
     emitParticles = true;
   }
 
@@ -216,7 +203,8 @@ void draw() {
     lastActionTime = currentTime; // Update the last action time
     isActionActive = true;
 
-    textDisplay = new TextDisplay(messages, personagem);
+    textFont(myFont);
+    textDisplay = new TextDisplay(messages, personagem, color(224, 33, 138));
     personagem = getRandomImageFrom(sketchPath("imagens/personagens"));
   }
 
@@ -224,27 +212,31 @@ void draw() {
   if (isActionActive && (currentTime - lastActionTime <= actionDuration)) {
     textDisplay.desenharPersonagem(personagem);
     textDisplay.display(width / 2, height / 4*3);
+    
+    for (Star star : stars) {
+    star.update();
+    star.display();
+  }
+  
   } else {
     isActionActive = false; // End the action
   }
-  
-  
+
+
   //==============================CAVALOS==============================
   if (currentTime - lastActionTimeCavalo >= intervalCavalos) {
     lastActionTimeCavalo = currentTime; // Update the last action time
     isCavalosActive = true;
 
-    textDisplay = new TextDisplay(messages, personagem);
-    personagem = getRandomImageFrom(sketchPath("imagens/cavalos"));
+    imgCavalo = getRandomImageFrom(sketchPath("imagens/cavalos"));
   }
 
   // Check if the action duration has passed
-  if (isActionActive && (currentTime - lastActionTime <= actionDuration)) {
+  if (isCavalosActive && (currentTime - lastActionTime <= actionDuration)) {
     image(imgCavalo, 0, 0);
   } else {
     isCavalosActive = false; // End the Cavalos
   }
- 
 }
 
 
