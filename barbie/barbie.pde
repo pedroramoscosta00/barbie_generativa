@@ -59,7 +59,7 @@ void setup() {
 
   //==============================SOUND==============================
   minim = new Minim(this);
-  song = minim.loadFile("musica/Dua Lipa - Dance The Night .mp3", 1024);
+  song = minim.loadFile("dua_ken.mp3", 1024);
   song.play();
   // a beat detection object that is FREQ_ENERGY mode that
   // expects buffers the length of song's buffer size
@@ -192,7 +192,7 @@ void draw() {
     }
   }
 
-  // Call the particles again if lifespan is done (explosion fades)
+  // Call the particles again if beat is played
   if (beat.isSnare()) {
     emitParticles = true;
   }
@@ -224,7 +224,7 @@ void draw() {
 
 
   //==============================CAVALOS==============================
-  if (currentTime - lastActionTimeCavalo >= intervalCavalos) {
+  if (currentTime - lastActionTimeCavalo >= 18000) {
     lastActionTimeCavalo = currentTime; // Update the last action time
     isCavalosActive = true;
 
