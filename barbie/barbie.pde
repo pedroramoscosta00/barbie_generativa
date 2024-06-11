@@ -50,12 +50,13 @@ ArrayList<Star> stars;
 
 //Export
 String nomePastaOuput;
-
-
+int startTime;
 
 void setup() {
   size(1920, 960);
   frameRate(30);
+
+  startTime = millis();
 
   // Definir objetos de classes
   pg = createGraphics(width, height);
@@ -130,7 +131,7 @@ void setup() {
   for (int i = 0; i < 10; i++) {
     stars.add(new Star(random(TWO_PI), 50 + i * 10, 0.05, 0.5));
   }
-  
+
   nomePastaOuput = System.currentTimeMillis() + "";
 }
 
@@ -146,6 +147,10 @@ PImage getRandomImageFrom(String pathToFolderWithImgs) {
 }
 
 void draw() {
+  if (millis() - startTime >= 30000) {
+    exit(); // Stop the program
+  }
+
   //==============================Background==============================
   bg1.desenha();
 
@@ -245,6 +250,6 @@ void draw() {
   } else {
     isCavalosActive = false; // End the Cavalos
   }
-  
+
   saveFrame(sketchPath("exportacao/" + nomePastaOuput + "/" + nf(frameCount, 6) + ".png"));
 }
