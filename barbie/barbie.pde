@@ -48,10 +48,14 @@ PImage personagem, imgCavalo;
 //stars in quotes
 ArrayList<Star> stars;
 
+//Export
+String nomePastaOuput;
+
 
 
 void setup() {
   size(1920, 960);
+  frameRate(30);
 
   // Definir objetos de classes
   pg = createGraphics(width, height);
@@ -126,6 +130,8 @@ void setup() {
   for (int i = 0; i < 10; i++) {
     stars.add(new Star(random(TWO_PI), 50 + i * 10, 0.05, 0.5));
   }
+  
+  nomePastaOuput = System.currentTimeMillis() + "";
 }
 
 PImage getRandomImageFrom(String pathToFolderWithImgs) {
@@ -204,7 +210,7 @@ void draw() {
     isActionActive = true;
 
     textFont(myFont);
-    textDisplay = new TextDisplay(messages, personagem, color(224, 33, 138));
+    textDisplay = new TextDisplay(messagesBarbie, personagem, color(224, 33, 138));
     personagem = getRandomImageFrom(sketchPath("imagens/personagens"));
   }
 
@@ -226,7 +232,7 @@ void draw() {
   if (currentTime - lastActionTimeCavalo >= 17000) {
     lastActionTimeCavalo = currentTime; // Update the last action time
     isCavalosActive = true;
-    textCavalo = new TextDisplay(messages, imgCavalo, color(224, 33, 138));
+    textCavalo = new TextDisplay(messagesKen, imgCavalo, color(224, 33, 138));
 
     imgCavalo = getRandomImageFrom(sketchPath("imagens/cavalos"));
   }
@@ -239,4 +245,6 @@ void draw() {
   } else {
     isCavalosActive = false; // End the Cavalos
   }
+  
+  saveFrame(sketchPath("exportacao/" + nomePastaOuput + "/" + nf(frameCount, 6) + ".png"));
 }

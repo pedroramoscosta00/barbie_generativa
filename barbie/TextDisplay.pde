@@ -81,7 +81,27 @@ String[] messagesKen = {
     "The Mojo Dojo Casa House is a fortress of solitude for men.",
     "Only in the Mojo Dojo Casa House can a man truly be free.",
     "Everything about the Mojo Dojo Casa House is perfect for a guy like me.",
-    "The Mojo Dojo Casa House is my sanctuary, my paradise."
+    "The Mojo Dojo Casa House is my sanctuary, my paradise.",
+    "The Mojo Dojo Casa House is where I can be unapologetically me.",
+    "This is more than a house, it’s a symbol of masculinity.",
+    "The Mojo Dojo Casa House is where we can embrace our true selves.",
+    "Welcome to the ultimate man cave: the Mojo Dojo Casa House.",
+    "In the Mojo Dojo Casa House, we make our own destiny.",
+    "Barbie, you have to see how amazing the Mojo Dojo Casa House is.",
+    "The Mojo Dojo Casa House is all about living large and in charge.",
+    "Life is better at the Mojo Dojo Casa House.",
+    "The Mojo Dojo Casa House is where adventure begins.",
+    "Here at the Mojo Dojo Casa House, we’re kings of our own world.",
+    "There’s nothing like the Mojo Dojo Casa House anywhere else.",
+    "The Mojo Dojo Casa House: where men can be men.",
+    "In the Mojo Dojo Casa House, we write our own rules.",
+    "The Mojo Dojo Casa House is where legends are made.",
+    "This is my kingdom, my Mojo Dojo Casa House.",
+    "The Mojo Dojo Casa House is the ultimate hangout spot.",
+    "Every man needs a place like the Mojo Dojo Casa House.",
+    "The Mojo Dojo Casa House is where we find our true strength.",
+    "The Mojo Dojo Casa House: where every day is an adventure.",
+    "Barbie, the Mojo Dojo Casa House is a man’s paradise."
 };
 // TextDisplay class
 class TextDisplay {
