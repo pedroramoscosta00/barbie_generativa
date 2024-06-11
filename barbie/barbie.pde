@@ -34,7 +34,7 @@ Dias dias;
 
 // Declare a TextDisplay object
 TextDisplay textDisplay, textCavalo;
-int interval = 13000;       // Interval between actions (in milliseconds)
+float interval = random(5000, 10000);       // Interval between actions (in milliseconds)
 int actionDuration = 7000; // Duration of the action (in milliseconds)
 int lastActionTime = 0;
 boolean isActionActive = false;
@@ -51,6 +51,8 @@ ArrayList<Star> stars;
 //Export
 String nomePastaOuput;
 int startTime;
+int frameCountExported = 0; // Track number of exported frames
+int totalFramesToExport = 30 * 30; // Expected frames (frameRate * duration in seconds)
 
 void setup() {
   size(1920, 960);
@@ -147,9 +149,10 @@ PImage getRandomImageFrom(String pathToFolderWithImgs) {
 }
 
 void draw() {
-  if (millis() - startTime >= 30000) {
-    exit(); // Stop the program
-  }
+  // Check if 30 seconds have passed or if we've exported the expected number of frames
+  /*if (frameCountExported >= totalFramesToExport) {
+   exit(); // Stop the program
+   }*/
 
   //==============================Background==============================
   bg1.desenha();
@@ -251,5 +254,6 @@ void draw() {
     isCavalosActive = false; // End the Cavalos
   }
 
-  saveFrame(sketchPath("exportacao/" + nomePastaOuput + "/" + nf(frameCount, 6) + ".png"));
+  /*saveFrame(sketchPath("exportacao/" + nomePastaOuput + "/" + nf(frameCount, 6) + ".png"));
+   frameCountExported++;*/
 }
