@@ -39,8 +39,9 @@ int actionDuration = 7000; // Duration of the action (in milliseconds)
 int lastActionTime = 0;
 boolean isActionActive = false;
 
-int intervalCavalos = 1000;
+int intervalCavalos = 5000;
 int lastActionTimeCavalo = 0;
+int lastHorseDrawTime = 0; // Track the last time a horse image was drawn
 boolean isCavalosActive = false;
 
 PImage personagem, imgCavalo;
@@ -130,7 +131,7 @@ void setup() {
   //==============================stars in quotes==============================
   // Initialize stars
   stars = new ArrayList<Star>();
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < random(10, 50); i++) {
     stars.add(new Star(random(TWO_PI), 50 + i * 10, 0.05, 0.5));
   }
 
@@ -189,7 +190,7 @@ void draw() {
     float randomX = random(0, width);
     float randomY = random(0, height/3);
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < random(50, 150); i++) {
       int randomShape = round(random(3)); // random shape between 0 (circle) and 2 (asterisk)
       particles.add(new Particle(randomX, randomY, randomShape));
     }
@@ -245,8 +246,15 @@ void draw() {
     imgCavalo = getRandomImageFrom(sketchPath("imagens/cavalos"));
   }
 
+  // Drawing horse images every 5 seconds
+  if (currentTime - lastHorseDrawTime >= intervalCavalos) {
+    lastHorseDrawTime = currentTime; // Update the last horse draw time
+    imgCavalo = getRandomImageFrom(sketchPath("imagens/cavalos"));
+    textCavalo = new TextDisplay(messagesKen, imgCavalo, color(224, 33, 138));
+  }
+
   // Check if the action duration has passed
-  if (isCavalosActive && (currentTime - lastActionTime <= 100000)) {
+  if (isCavalosActive && (currentTime - lastActionTimeCavalo <= 100000)) {
     textCavalo.desenharPersonagem(imgCavalo);
     textCavalo.display(width / 2, height / 4*3);
     //image(imgCavalo, 0, 0);
