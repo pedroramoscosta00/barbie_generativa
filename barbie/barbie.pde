@@ -33,7 +33,7 @@ int currentTime;
 Dias dias;
 
 // Declare a TextDisplay object
-TextDisplay textDisplay;
+TextDisplay textDisplay, textCavalo;
 int interval = 13000;       // Interval between actions (in milliseconds)
 int actionDuration = 7000; // Duration of the action (in milliseconds)
 int lastActionTime = 0;
@@ -59,7 +59,7 @@ void setup() {
 
   //==============================SOUND==============================
   minim = new Minim(this);
-  song = minim.loadFile("dua_ken.mp3", 1024);
+  song = minim.loadFile("musica/dua_ken.mp3", 1024);
   song.play();
   // a beat detection object that is FREQ_ENERGY mode that
   // expects buffers the length of song's buffer size
@@ -79,7 +79,7 @@ void setup() {
   myFont = loadFont("Bartex-48.vlw");
 
 
- 
+
 
   //==============================Imagens==============================
   PImage fore1 = getRandomImageFrom(sketchPath("imagens/foregrounds"));
@@ -119,7 +119,7 @@ void setup() {
   //==============================Timer==============================
   lastActionTime = millis();
   lastActionTimeCavalo = millis();
-  
+
   //==============================stars in quotes==============================
   // Initialize stars
   stars = new ArrayList<Star>();
@@ -153,7 +153,7 @@ void draw() {
 
   //element2.desenha();
   //element2.noiseMovement();
-//element3.desenha();
+  //element3.desenha();
   //element3.noiseMovement();
   //element4.desenha();
   //element4.noiseMovement();
@@ -212,35 +212,31 @@ void draw() {
   if (isActionActive && (currentTime - lastActionTime <= actionDuration)) {
     textDisplay.desenharPersonagem(personagem);
     textDisplay.display(width / 2, height / 4*3);
-    
+
     for (Star star : stars) {
-    star.update();
-    star.display();
-  }
-  
+      star.update();
+      star.display();
+    }
   } else {
     isActionActive = false; // End the action
   }
 
 
   //==============================CAVALOS==============================
-  if (currentTime - lastActionTimeCavalo >= 18000) {
+  if (currentTime - lastActionTimeCavalo >= 17000) {
     lastActionTimeCavalo = currentTime; // Update the last action time
     isCavalosActive = true;
+    textCavalo = new TextDisplay(messages, imgCavalo, color(224, 33, 138));
 
     imgCavalo = getRandomImageFrom(sketchPath("imagens/cavalos"));
   }
 
   // Check if the action duration has passed
-  if (isCavalosActive && (currentTime - lastActionTime <= actionDuration)) {
-    image(imgCavalo, 0, 0);
+  if (isCavalosActive && (currentTime - lastActionTime <= 100000)) {
+    textCavalo.desenharPersonagem(imgCavalo);
+    textCavalo.display(width / 2, height / 4*3);
+    //image(imgCavalo, 0, 0);
   } else {
     isCavalosActive = false; // End the Cavalos
   }
 }
-
-
-/*void mousePressed() {
- // Select new random text when the mouse is pressed
- textDisplay.selectRandomText(messages);
- }*/
